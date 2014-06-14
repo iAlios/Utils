@@ -6,7 +6,7 @@ Utils
   MNumberList 类主要是用来实现多断数字的集合列表, 比如"[10-100]/10,[100-5000]/100", "1-10,15,20,50"，"1-10,[10-100]/10,500"等，自由组合的数字集合。
   具体操作如下：
   
-  	String num1 = "1-10,15,20,50";
+  		String num1 = "1-10,15,20,50";
 		String num2 = "[10-100]/10,[100-5000]/100,5200";
 		MNumberList numberList = new MNumberList(num1);
 		System.out.println(numberList.next(4)); // 5
