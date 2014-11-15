@@ -24,3 +24,6 @@ Utils
 		System.out.println(numberList.next(98)); // 200
 	
 	在这里主要是将数据就近原则，然后进行这种数据的集合。方便集合获取某个数据的前一个数字，以及后一个数字的获取。以及将数据转为规定集合中的数据。
+
+BitUtil主要是用来进行二进制数据处理，将byte数据转为8位boolean数据
+HexDump为十六进制与byte进行转换的工具
