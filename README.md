@@ -31,4 +31,4 @@ BitUtil主要是用来进行二进制数据处理，将byte数据转为8位boole
 HexDump为十六进制与byte进行转换的工具
 
 
-IntUtil 主要是用来将 int 数据转换为byte[]的工具
+IntUtils 主要是用来将 int 数据转换为 byte[] 的工具
