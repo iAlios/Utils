@@ -71,14 +71,13 @@ public class IntUtils {
 	 * @param i
 	 * @return
 	 */
-	public static byte[] intToByteArray(int i) {
-		byte[] result = new byte[4];
+	public static byte[] intToByteArray(int fbit) {
 		// 由高位到低位
-		result[0] = (byte) ((i >> 24) & 0xFF);
-		result[1] = (byte) ((i >> 16) & 0xFF);
-		result[2] = (byte) ((i >> 8) & 0xFF);
-		result[3] = (byte) (i & 0xFF);
-		return result;
+		byte[] b = new byte[4];
+		for (int i = 0; i < 4; i++) {
+			b[i] = (byte) (fbit >> ((4 - 1 - i) * 8));
+		}
+		return b;
 	}
 
 	/**
@@ -104,13 +103,11 @@ public class IntUtils {
 	 * @param i
 	 * @return
 	 */
-	public static byte[] intToByteArrayL(int i) {
+	public static byte[] intToByteArrayL(int fbit) {
 		byte[] result = new byte[4];
-		// 由低位到高位
-		result[3] = (byte) ((i >> 24) & 0xFF);
-		result[2] = (byte) ((i >> 16) & 0xFF);
-		result[1] = (byte) ((i >> 8) & 0xFF);
-		result[0] = (byte) (i & 0xFF);
+		for (int i = 0; i < 4; i++) {
+			result[i] = (byte) (fbit >> (i * 8));
+		}
 		return result;
 	}
 
@@ -137,54 +134,111 @@ public class IntUtils {
 	 * @param f
 	 * @return
 	 */
-	public static byte[] float2byte(float f) {
-		// 把float转换为byte[]
+	public static byte[] floatToByteArray(float f) {
 		int fbit = Float.floatToIntBits(f);
 		byte[] b = new byte[4];
 		for (int i = 0; i < 4; i++) {
-			b[i] = (byte) (fbit >> (24 - i * 8));
+			b[i] = (byte) (fbit >> (i * 8));
 		}
-		// 翻转数组
-		int len = b.length;
-		// 建立一个与源数组元素类型相同的数组
-		byte[] dest = new byte[len];
-		// 为了防止修改源数组，将源数组拷贝一份副本
-		System.arraycopy(b, 0, dest, 0, len);
-		byte temp;
-		// 将顺位第i个与倒数第i个交换
-		for (int i = 0; i < len / 2; ++i) {
-			temp = dest[i];
-			dest[i] = dest[len - i - 1];
-			dest[len - i - 1] = temp;
-		}
-		return dest;
+		return b;
 	}
 
-	public static float byteArrayToFloat(byte[] b) {
-		int l = b[0];
-		l &= 0xff;
-		l |= ((long) b[1] << 8);
-		l &= 0xffff;
-		l |= ((long) b[2] << 16);
-		l &= 0xffffff;
-		l |= ((long) b[3] << 24);
-		return Float.intBitsToFloat(l);
+	public static float byteArrayToFloat(byte[] bytes) {
+		int value = 0;
+		// 由低位到高位
+		int shift = 0;
+		for (int i = 0; i < 4; i++) {
+			shift = i * 8;
+			value += ((int) bytes[i] & 0x000000FF) << shift;// 往高位游
+		}
+		return Float.intBitsToFloat(value);
+	}
+
+	/**
+	 * 将64位的long值放到8字节的byte数组
+	 * 
+	 * @param num
+	 * @return 返回转换后的byte数组
+	 */
+	public static byte[] longToByteArray(long num) {
+		byte[] result = new byte[8];
+		for (int i = 0; i < 8; i++) {
+			result[i] = (byte) (num >> (i * 8));
+		}
+		return result;
+	}
+
+	/**
+	 * 将8字节的byte数组转成一个long值
+	 * 
+	 * @param byteArray
+	 * @return 转换后的long型数值
+	 */
+	public static long byteArrayToLong(byte[] byteArray) {
+		long value = 0;
+		int shift = 0;
+		for (int i = 0; i < 8; i++) {
+			shift = i * 8;
+			value += ((long) byteArray[i] & 0xFF) << shift;
+		}
+		return value;
+	}
+
+	/**
+	 * double转换byte
+	 * 
+	 * @param x
+	 */
+	public static byte[] doubleToByteArray(double x) {
+		byte[] b = new byte[8];
+		long l = Double.doubleToLongBits(x);
+		for (int i = 0; i < 8; i++) {
+			b[i] = (byte) (l >> (i * 8));
+		}
+		return b;
+	}
+
+	/**
+	 * 通过byte数组取得float
+	 * 
+	 * @param b
+	 * @return
+	 */
+	public static double byteArrayToDouble(byte[] bytes) {
+		long value = 0;
+		int shift = 0;
+		for (int i = 0; i < 8; i++) {
+			shift = i * 8;
+			value += ((long) bytes[i] & 0xFF) << shift;
+		}
+		return Double.longBitsToDouble(value);
 	}
 
 	public static void main(String[] args) {
 		short dd = 2;
+		System.out.println("=========================SHORT========================");
 		System.out.println(HexDump.dumpHexString(shortToByteArray(dd)));
 		System.out.println(byteArrayToShort(shortToByteArray(dd)));
 		System.out.println(HexDump.dumpHexString(shortToByteArrayL(dd)));
 		System.out.println(byteArrayToShortL(shortToByteArrayL(dd)));
 
+		System.out.println("=========================INT========================");
 		System.out.println(HexDump.dumpHexString(intToByteArray(dd)));
 		System.out.println(byteArrayToInt(intToByteArray(dd)));
 		System.out.println(HexDump.dumpHexString(intToByteArrayL(dd)));
 		System.out.println(byteArrayToIntL(intToByteArrayL(dd)));
 
-		System.out.println(HexDump.dumpHexString(float2byte(dd * 0.1f)));
-		System.out.println(byteArrayToFloat(float2byte(dd * 0.1f)));
+		System.out.println("=========================LONG========================");
+		System.out.println(HexDump.dumpHexString(longToByteArray(dd * 1l)));
+		System.out.println(byteArrayToLong(longToByteArray(dd * 1l)));
+
+		System.out.println("=========================FLOAT========================");
+		System.out.println(HexDump.dumpHexString(floatToByteArray(dd * 0.1f)));
+		System.out.println(byteArrayToFloat(floatToByteArray(dd * 0.1f)));
+
+		System.out.println("=========================DOUBLE========================");
+		System.out.println(HexDump.dumpHexString(doubleToByteArray(dd * 0.1d)));
+		System.out.println(byteArrayToDouble(doubleToByteArray(dd * 0.1d)));
 	}
 
 }
