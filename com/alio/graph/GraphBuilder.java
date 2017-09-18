@@ -80,10 +80,17 @@ public class GraphBuilder<T> {
 	}
 
 	public GraphBuilder<T> insertEdge(T vertex1, T vertex2) {
-		mEdgeList.add(new Edge<T, T>(vertex1, vertex2));
-		return this;
+		return insertEdge(vertex1, vertex2, true);
 	}
 
+	public GraphBuilder<T> insertEdge(T vertex1, T vertex2, boolean isBidirection) {
+		mEdgeList.add(new Edge<T, T>(vertex1, vertex2));
+		if(isBidirection) {
+			mEdgeList.add(new Edge<T, T>(vertex2, vertex1));
+		}
+		return this;
+	}
+	
 	public GraphBuilder<T> insertEdge(T vertex1, T vertex2, int weight) {
 		mEdgeList.add(new Edge<T, T>(vertex1, vertex2, weight));
 		return this;
@@ -110,24 +117,15 @@ public class GraphBuilder<T> {
 		for (String label : labels) {
 			graphBuilder.insertVertex(label);// 插入节点
 		}
-		graphBuilder.insertEdge("1", "2", 1);
-		graphBuilder.insertEdge("1", "3", 1);
-		graphBuilder.insertEdge("2", "4", 1);
-		graphBuilder.insertEdge("2", "5", 1);
-		graphBuilder.insertEdge("4", "8", 1);
-		graphBuilder.insertEdge("5", "8", 1);
-		graphBuilder.insertEdge("3", "6", 1);
-		graphBuilder.insertEdge("3", "7", 1);
-		graphBuilder.insertEdge("6", "7", 1);
-		graphBuilder.insertEdge("2", "1", 1);
-		graphBuilder.insertEdge("3", "1", 1);
-		graphBuilder.insertEdge("4", "2", 1);
-		graphBuilder.insertEdge("5", "2", 1);
-		graphBuilder.insertEdge("8", "4", 1);
-		graphBuilder.insertEdge("8", "5", 1);
-		graphBuilder.insertEdge("7", "3", 1);
-		graphBuilder.insertEdge("6", "3", 1);
-		graphBuilder.insertEdge("7", "6", 1);
+		graphBuilder.insertEdge("1", "2");
+		graphBuilder.insertEdge("1", "3");
+		graphBuilder.insertEdge("2", "4");
+		graphBuilder.insertEdge("2", "5");
+		graphBuilder.insertEdge("4", "8");
+		graphBuilder.insertEdge("5", "8");
+		graphBuilder.insertEdge("3", "6");
+		graphBuilder.insertEdge("3", "7");
+		graphBuilder.insertEdge("6", "7");
 		
 		Graph<String> graph = graphBuilder.build();
 		System.out.println("深度优先搜索序列为：");
