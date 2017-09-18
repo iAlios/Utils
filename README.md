@@ -32,3 +32,32 @@ HexDump 为十六进制与byte进行转换的工具
 
 
 IntUtils 主要是用来将 int 数据转换为 byte[] 的工具
+
+Graph 为图结构实现，其使用方式如下：
+
+		String labels[] = { "1", "2", "3", "4", "5", "6", "7", "8" };// 节点的标识
+		GraphBuilder<String> graphBuilder = new GraphBuilder<String>();
+		for (String label : labels) {
+			graphBuilder.insertVertex(label);// 插入节点
+		}
+		graphBuilder.insertEdge("1", "2");
+		graphBuilder.insertEdge("1", "3");
+		graphBuilder.insertEdge("2", "4");
+		graphBuilder.insertEdge("2", "5");
+		graphBuilder.insertEdge("4", "8");
+		graphBuilder.insertEdge("5", "8");
+		graphBuilder.insertEdge("3", "6");
+		graphBuilder.insertEdge("3", "7");
+		graphBuilder.insertEdge("6", "7");
+		
+		Graph<String> graph = graphBuilder.build();
+		System.out.println("深度优先搜索序列为：");
+		for (String str : graph.depthFirstSearch()) {
+			System.out.print(str + "  ");
+		}
+		System.out.println();
+		System.out.println("广度优先搜索序列为：");
+		for (String str : graph.broadFirstSearch()) {
+			System.out.print(str + "  ");
+		}
+
